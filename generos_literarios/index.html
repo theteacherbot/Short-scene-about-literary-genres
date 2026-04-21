@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Géneros Literarios en Crisis</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --curtain: #1A0A0A;
+    --deep: #0D0505;
+    --crimson: #8B1A1A;
+    --rose: #C44569;
+    --cream: #F5EDD8;
+    --parchment: #EAD9B5;
+    --stage: #2A1515;
+    --shadow: rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── CURTAIN TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(100,20,20,0.08) 0px,
+        rgba(100,20,20,0.04) 3px,
+        transparent 3px,
+        transparent 40px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 40px 60px;
+    background:
+      radial-gradient(ellipse at 50% 0%, #4A1010 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, #3A0A0A 0%, transparent 60%),
+      var(--curtain);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  .curtain-left, .curtain-right {
+    position: absolute;
+    top: 0;
+    width: 120px;
+    height: 100%;
+    background: linear-gradient(90deg, #3A0000, transparent);
+    z-index: 1;
+  }
+  .curtain-right {
+    right: 0;
+    background: linear-gradient(-90deg, #3A0000, transparent);
+  }
+
+  .hero-badge {
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 6px 20px;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-emoji {
+    font-size: 5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+    filter: drop-shadow(0 0 20px rgba(201,168,76,0.5));
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 8vw, 6rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--gold-light);
+    text-shadow:
+      0 0 40px rgba(201,168,76,0.4),
+      2px 2px 0 #5A2A00;
+    margin: 20px 0 10px;
+    opacity: 0;
+    animation: fadeUp 1s 0.6s forwards;
+  }
+
+  .hero h1 span {
+    display: block;
+    font-style: italic;
+    font-size: 0.6em;
+    color: var(--gold);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--parchment);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+    margin-top: 20px;
+    letter-spacing: 0.08em;
+  }
+
+  .hero-stars {
+    font-size: 1.5rem;
+    margin-top: 30px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+    letter-spacing: 0.3em;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    opacity: 0;
+    animation: fadeUp 0.8s 1.5s forwards, bounce 2s 2.5s infinite;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 80px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--gold-light);
+    margin-bottom: 50px;
+    font-weight: 700;
+  }
+
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 0 80px;
+    opacity: 0.4;
+  }
+
+  /* ── CHARACTERS ── */
+  .characters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 24px;
+  }
+
+  .character-card {
+    background: linear-gradient(135deg, var(--stage), #1A0808);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    padding: 28px 20px;
+    text-align: center;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .character-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .character-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(201,168,76,0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+
+  .character-card:hover::before { opacity: 1; }
+
+  .character-emoji {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .character-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .character-desc {
+    font-size: 0.85rem;
+    color: #BBA88A;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  /* ── SCENE BLOCK ── */
+  .scene {
+    background: linear-gradient(135deg, rgba(42,21,21,0.8), rgba(26,10,10,0.9));
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    padding: 36px 40px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .scene-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .scene p {
+    margin-bottom: 14px;
+    color: var(--parchment);
+    font-size: 1.05rem;
+  }
+
+  .dialogue {
+    margin: 10px 0;
+    padding: 10px 0 10px 20px;
+    border-left: 2px solid rgba(201,168,76,0.3);
+  }
+
+  .dialogue strong {
+    color: var(--gold-light);
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .dialogue span {
+    color: #D4B89A;
+    font-style: italic;
+  }
+
+  /* ── GENRE CARDS ── */
+  .genres-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 28px;
+  }
+
+  .genre-card {
+    border-radius: 6px;
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+
+  .genre-card:hover { transform: translateY(-8px); }
+
+  .genre-card.lirico {
+    background: linear-gradient(135deg, #2D1040 0%, #1A0A2A 100%);
+    border: 1px solid rgba(180,100,200,0.3);
+  }
+  .genre-card.narrativo {
+    background: linear-gradient(135deg, #0A2040 0%, #051528 100%);
+    border: 1px solid rgba(80,150,220,0.3);
+  }
+  .genre-card.epico {
+    background: linear-gradient(135deg, #2A1A00 0%, #180F00 100%);
+    border: 1px solid rgba(220,160,40,0.3);
+  }
+  .genre-card.dramatico {
+    background: linear-gradient(135deg, #2A0A10 0%, #1A0508 100%);
+    border: 1px solid rgba(200,50,80,0.3);
+  }
+
+  .genre-emoji {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .genre-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--gold-light);
+  }
+
+  .genre-subtitle {
+    font-style: italic;
+    color: #BBA88A;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .genre-list {
+    list-style: none;
+    margin-bottom: 24px;
+  }
+
+  .genre-list li {
+    padding: 5px 0;
+    font-size: 0.92rem;
+    color: #D4C0A0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .genre-list li span:first-child {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .genre-exchange {
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    font-style: italic;
+  }
+
+  .genre-exchange .line { margin: 4px 0; }
+  .genre-exchange .line strong {
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-style: normal;
+  }
+
+  /* ── CHAOS SECTION ── */
+  .chaos-section {
+    background: linear-gradient(135deg, #1E0505, #0A0018);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin: 40px 0;
+  }
+
+  .chaos-section::before {
+    content: '😂';
+    position: absolute;
+    font-size: 200px;
+    opacity: 0.04;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .chaos-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--gold-light);
+    font-weight: 900;
+    font-style: italic;
+    margin-bottom: 40px;
+    text-shadow: 0 0 30px rgba(201,168,76,0.3);
+  }
+
+  .chaos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 600px;
+    margin: 0 auto 30px;
+  }
+
+  .chaos-bubble {
+    border-radius: 8px;
+    padding: 20px;
+    font-style: italic;
+    font-size: 1rem;
+    animation: shake 0.5s infinite alternate;
+  }
+
+  .chaos-bubble:nth-child(1) { background: rgba(45,16,64,0.7); color: #D4A0E8; animation-delay: 0s; }
+  .chaos-bubble:nth-child(2) { background: rgba(10,32,64,0.7); color: #80BBEE; animation-delay: 0.12s; }
+  .chaos-bubble:nth-child(3) { background: rgba(42,26,0,0.7); color: #E8C060; animation-delay: 0.07s; }
+  .chaos-bubble:nth-child(4) { background: rgba(42,10,16,0.7); color: #E88090; animation-delay: 0.18s; }
+
+  .chaos-bubble strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-style: normal;
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+  }
+
+  .chaos-note {
+    color: #8A7060;
+    font-style: italic;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── CONCLUSION ── */
+  .conclusion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 80px 40px;
+  }
+
+  .conclusion-emoji {
+    font-size: 4rem;
+    margin-bottom: 20px;
+  }
+
+  .conclusion h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 40px;
+  }
+
+  .conclusion-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .concl-card {
+    background: var(--stage);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 6px;
+    padding: 20px 24px;
+    min-width: 180px;
+    text-align: center;
+    transition: transform 0.3s;
+  }
+
+  .concl-card:hover { transform: scale(1.05); }
+
+  .concl-card .emoji { font-size: 2rem; display: block; margin-bottom: 8px; }
+  .concl-card .name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gold-light);
+    font-size: 1rem;
+  }
+  .concl-card .action {
+    color: #B0906A;
+    font-style: italic;
+    font-size: 0.88rem;
+    margin-top: 4px;
+  }
+
+  .conclusion-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    color: var(--cream);
+    max-width: 600px;
+    line-height: 1.5;
+    position: relative;
+    padding: 0 40px;
+  }
+
+  .conclusion-quote::before,
+  .conclusion-quote::after {
+    content: '"';
+    font-size: 5rem;
+    color: var(--gold);
+    opacity: 0.25;
+    font-style: normal;
+    position: absolute;
+    line-height: 1;
+  }
+
+  .conclusion-quote::before { top: -10px; left: 0; }
+  .conclusion-quote::after { bottom: -30px; right: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--curtain);
+    border-top: 1px solid rgba(201,168,76,0.2);
+    padding: 60px 40px;
+    text-align: center;
+  }
+
+  .footer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    color: var(--gold-light);
+    margin-bottom: 16px;
+    text-shadow: 0 0 40px rgba(201,168,76,0.3);
+  }
+
+  .footer-sub {
+    color: #BBA88A;
+    font-style: italic;
+    font-size: 1rem;
+    max-width: 500px;
+    margin: 0 auto 30px;
+    line-height: 1.7;
+  }
+
+  .footer-genres {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 40px;
+  }
+
+  .footer-fin {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.4em;
+    opacity: 0.6;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  @keyframes shake {
+    from { transform: rotate(-0.5deg) scale(1); }
+    to { transform: rotate(0.5deg) scale(1.01); }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    section { padding: 60px 20px; }
+    .chaos-grid { grid-template-columns: 1fr; }
+    .scene { padding: 24px 20px; }
+    footer { padding: 50px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<div class="hero">
+  <div class="curtain-left"></div>
+  <div class="curtain-right"></div>
+<p style="font-weight: bold;text-align: center;">INSTITUCIÓN EDUCATIVA CISNEROS <br/>LICEO CISNEROS <br/>HUMANIDADES <br/>LENGUA CASTELLANA<br/> GRADO 10°</p>
+  <div class="hero-badge">Guion teatral Día del idioma Español· Versión comedia · 6 estudiantes</div>
+  <div class="hero-emoji">🎭</div>
+  <h1>
+    Los Géneros Literarios
+    <span>en Crisis</span>
+  </h1>
+  <p class="hero-sub">Un drama cómico en el que los géneros pelean por la atención de un estudiante confundido</p>
+  <div class="hero-stars">🌟 Feliz Día del Idioma 🌟</div>
+  <div class="scroll-hint">▼ &nbsp; leer obra &nbsp; ▼</div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ PERSONAJES ═══════════════════ -->
+<section>
+  <p class="section-label reveal">Elenco de la obra</p>
+  <h2 class="section-title reveal">👥 Los Personajes</h2>
+
+  <div class="characters-grid">
+    <div class="character-card reveal">
+      <span class="character-emoji">🎤</span>
+      <div class="character-name">Moderador</div>
+      <div class="character-desc">Profe relajado que dirige la reunión</div>
+    </div>
+    <div class="character-card reveal">
+      <span class="character-emoji">💔</span>
+      <div class="character-name">Lírico</div>
+      <div class="character-desc">Intenso y emocional. Habla de sentimientos</div>
+    </div>
+    <div class="character-card reveal">
+      <span class="character-emoji">📖</span>
+      <div class="character-name">Narrativo</div>
+      <div class="character-desc">Cuentero y desorganizado. Narra historias</div>
+    </div>
+    <div class="character-card reveal">
+      <span class="character-emoji">⚔️</span>
+      <div class="character-name">Épico</div>
+      <div class="character-desc">Heroico y exageradamente grandioso</div>
+    </div>
+    <div class="character-card reveal">
+      <span class="character-emoji">🎭</span>
+      <div class="character-name">Dramático</div>
+      <div class="character-desc">Conflictivo y exagerado. Pelea por todo</div>
+    </div>
+    <div class="character-card reveal">
+      <span class="character-emoji">😕</span>
+      <div class="character-name">Estudiante</div>
+      <div class="character-desc">Confundido y divertido. El que aprende</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ ESCENA INICIO ═══════════════════ -->
+<section>
+  <p class="section-label reveal">Acto I</p>
+  <h2 class="section-title reveal">🎬 Inicio de la Escena</h2>
+
+  <div class="scene reveal">
+    <span class="scene-tag">Escenario</span>
+    <p>El <strong>Moderador</strong> convoca una reunión de emergencia…</p>
+    <div class="dialogue">
+      <strong>Moderador:</strong>
+      <span>Bienvenidos a esta reunión de emergencia… tenemos un problema grave: ¡los estudiantes no saben quiénes somos!</span>
+    </div>
+    <div class="dialogue">
+      <strong>Estudiante:</strong>
+      <span>Profe… yo solo sé que hay poemas… cuentos… y como… peleas 😭</span>
+    </div>
+    <div class="dialogue">
+      <strong>Moderador:</strong>
+      <span>¡Por eso los llamamos! ¡Que pase el primero!</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ GÉNEROS ═══════════════════ -->
+<section>
+  <p class="section-label reveal">Acto II — Las presentaciones</p>
+  <h2 class="section-title reveal">Los Cuatro Géneros</h2>
+
+  <div class="genres-grid">
+
+    <!-- LÍRICO -->
+    <div class="genre-card lirico reveal">
+      <span class="genre-emoji">🌹</span>
+      <div class="genre-title">El Género Lírico</div>
+      <div class="genre-subtitle">"Yo soy el sentimiento… el suspiro del alma… el amor y el dolor"</div>
+      <ul class="genre-list">
+        <li><span>💔</span><span>Expreso emociones y sentimientos</span></li>
+        <li><span>🎵</span><span>Escribo en verso o prosa poética</span></li>
+        <li><span>🌙</span><span>Mis temas son el amor, la tristeza, la naturaleza, la traga… la tusa...</span></li>
+        <li><span>✍️</span><span>Siempre hablo en primera persona</span></li>
+      </ul>
+      <div class="genre-exchange">
+        <div class="line"><strong>Estudiante:</strong> Ahhh, ¡ya sé! usted es el de los estados tristes en WhatsApp... Parece un bobo 😏</div>
+        <div class="line"><strong>Lírico:</strong> ¡No son estados… es POESÍA PURA! 💔</div>
+      </div>
+    </div>
+
+    <!-- NARRATIVO -->
+    <div class="genre-card narrativo reveal">
+      <span class="genre-emoji">📖</span>
+      <div class="genre-title">El Género Narrativo</div>
+      <div class="genre-subtitle">"¡Yo cuento historias! Mire, mire, mire! Había una vez…"</div>
+      <ul class="genre-list">
+        <li><span>📚</span><span>Cuento hechos reales o ficticios</span></li>
+        <li><span>🧑‍💻</span><span>Tengo narrador, personajes y trama</span></li>
+        <li><span>🗺️</span><span>Mis formas más apetecidas son el cuento, la novela, la fábula, la leyenda</span></li>
+        <li><span>⏳</span><span>En todas ellas, manejo el comienzo, el tierrero y el final</span></li>
+      </ul>
+      <div class="genre-exchange">
+        <div class="line"><strong>Narrativo:</strong> Ejemplo: se enamoró, sufrió… y fin 😅</div>
+        <div class="line"><strong>Estudiante:</strong> Uy no, ese resumen ni en tarea 😭</div>
+      </div>
+    </div>
+
+    <!-- ÉPICO -->
+    <div class="genre-card epico reveal">
+      <span class="genre-emoji">⚔️</span>
+      <div class="genre-title">El Género Épico</div>
+      <div class="genre-subtitle">"¡Yo soy la grandeza… la gloria… la batalla!"</div>
+      <ul class="genre-list">
+        <li><span>🏆</span><span>Narro hazañas heroicas y legendarias</span></li>
+        <li><span>📜</span><span>Aparezco de la tradición oral o escrita</span></li>
+        <li><span>🗡️</span><span>Mis formas más apetecidas son la epopeya, el cantar de gesta y los romances</span></li>
+        <li><span>👑</span><span>El héroe enfrenta pruebas extraordinarias</span></li>
+      </ul>
+      <div class="genre-exchange">
+        <div class="line"><strong>Estudiante:</strong> ¿Tipo videojuego? 🎮</div>
+        <div class="line"><strong>Épico:</strong> ¡TIPO LEYENDA INMORTAL! ¡Lucharé contra mil enemigos!</div>
+      </div>
+    </div>
+
+    <!-- DRAMÁTICO -->
+    <div class="genre-card dramatico reveal">
+      <span class="genre-emoji">🎭</span>
+      <div class="genre-title">El Género Dramático</div>
+      <div class="genre-subtitle">"¡Porque tú nunca me entiendes!"</div>
+      <ul class="genre-list">
+        <li><span>🎬</span><span>Está escrito para ser representado en escena, así como hoy aquí</span></li>
+        <li><span>💬</span><span>Se expresa solo mediante diálogos y acotaciones; así como estos tontos</span></li>
+        <li><span>😂😢</span><span>Mis mejores subgéneros son la comedia, la tragedia y la tragicomedia</span></li>
+        <li><span>🎪</span><span>El conflicto es el motor de la obra</span></li>
+      </ul>
+      <div class="genre-exchange">
+        <div class="line"><strong>Dramático:</strong> ¡Exacto! ¡Ese es el problema!</div>
+        <div class="line"><strong>Estudiante:</strong> Este sí pelea solo, qué peligro 😳</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ EL CAOS ═══════════════════ -->
+<section style="padding-top: 0;">
+  <div class="chaos-section reveal">
+    <p class="section-label" style="margin-bottom: 12px;">Acto III — El clímax</p>
+    <h2 class="chaos-title">😂 ¡¡El Caos!!</h2>
+
+    <div class="chaos-grid">
+      <div class="chaos-bubble">
+        <strong>💔 Lírico</strong>
+        ¡Yo soy la mera profundidad!
+      </div>
+      <div class="chaos-bubble">
+        <strong>📖 Narrativo</strong>
+        ¡Yo cuento todo! ¡Nada se me pasa!
+      </div>
+      <div class="chaos-bubble">
+        <strong>⚔️ Épico</strong>
+        ¡Yo soy el más grande! ¡El chacho!
+      </div>
+      <div class="chaos-bubble">
+        <strong>🎭 Dramático</strong>
+        ¡Yo tengo más emoción!
+      </div>
+    </div>
+
+    <p class="chaos-note">*(Todos hablan al mismo tiempo)*</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ CONCLUSIÓN ═══════════════════ -->
+<div class="conclusion">
+  <div class="conclusion-emoji reveal">🧠</div>
+  <h2 class="reveal">El Estudiante Concluye — Ey, Ey, Ey ¡Ya!</h2>
+
+  <div class="conclusion-cards">
+    <div class="concl-card reveal">
+      <span class="emoji">💔</span>
+      <div class="name">El Lírico</div>
+      <div class="action">Yo hago sentir</div>
+    </div>
+    <div class="concl-card reveal">
+      <span class="emoji">📖</span>
+      <div class="name">El Narrativo</div>
+      <div class="action">Yo cuento historias</div>
+    </div>
+    <div class="concl-card reveal">
+      <span class="emoji">🎭</span>
+      <div class="name">El Dramático</div>
+      <div class="action">Yo actúo</div>
+    </div>
+    <div class="concl-card reveal">
+      <span class="emoji">⚔️</span>
+      <div class="name">El Épico</div>
+      <div class="action">Yo peleo con espadas imaginarias. Soy un quijote</div>
+    </div>
+  </div>
+
+  <p class="conclusion-quote reveal">
+    ¿Sí ven? De todo esto se puede concluir que ¡Todos sirven! 😄 Todos hacen la LITERATURA.
+  </p>
+</div>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div class="footer-title">🎉 ¡Feliz Día del Idioma!</div>
+  <p class="footer-sub">
+    El español: una lengua llena de sentimiento,<br>
+    historias, dramas y epopeyas. Y no se se acaba
+  </p>
+  <div class="footer-genres">
+    <span>💔 Lírico</span>
+    <span>·</span>
+    <span>📖 Narrativo</span>
+    <span>·</span>
+    <span>⚔️ Épico</span>
+    <span>·</span>
+    <span>🎭 Dramático</span>
+  </div>
+  <div class="footer-fin">🎭 &nbsp; F I N &nbsp; 🎭</div>
+  <p style="text-align: right;font-size: 10px;">Sitio web diseñado por el profesor <b>Edgar Herrera</b> con tecnología <a href="claude.ai.com">Claude</a> </p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
